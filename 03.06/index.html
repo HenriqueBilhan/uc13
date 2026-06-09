@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="projeto/assets/styles/style.css">
+  <title>Pokémon Battle Simulator</title>
+</head>
+<body>
+
+<!-- ===================== TITLE SCREEN ===================== -->
+<div id="title-screen">
+  <div class="title-logo">⚡</div>
+  <h1>POKÉMON<br>BATTLE SIMULATOR</h1>
+
+  <div class="pokemon-selectors">
+    <div class="selector-box">
+      <label>SEU POKÉMON</label>
+      <select id="player-select" onchange="previewPokemon('player')">
+        <option value="">-- Escolha --</option>
+      </select>
+      <img id="player-preview" class="preview-sprite" src="" alt="" />
+      <label class="shiny-toggle">
+        <input type="checkbox" id="player-shiny" onchange="previewPokemon('player')" />
+        ✨ SHINY
+      </label>
+    </div>
+
+    <div class="selector-box" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border-color:transparent;">
+      <span style="color:#f8d030;font-size:20px;">VS</span>
+    </div>
+
+    <div class="selector-box">
+      <label>ADVERSÁRIO</label>
+      <select id="enemy-select" onchange="previewPokemon('enemy')">
+        <option value="">-- Escolha --</option>
+      </select>
+      <img id="enemy-preview" class="preview-sprite" src="" alt="" />
+      <label class="shiny-toggle">
+        <input type="checkbox" id="enemy-shiny" onchange="previewPokemon('enemy')" />
+        ✨ SHINY
+      </label>
+    </div>
+  </div>
+
+  <div id="loading-title" style="color:#aaa;font-size:8px;margin-bottom:1rem;display:none;">Carregando Pokémon...</div>
+  <button id="start-btn" onclick="startBattle()" disabled>▶ BATALHAR!</button>
+</div>
+
+<!-- ===================== LOADING ===================== -->
+<div id="loading">
+  <span class="pokeball-spin">⚪</span>
+  Carregando batalha...
+</div>
+
+<!-- ===================== BATTLE SCREEN ===================== -->
+<div id="battle-screen">
+  <div class="wrapper">
+    <div class="screen-header">⚡ BATALHA POKÉMON ⚡</div>
+
+    <!-- Battlefield -->
+    <div class="battlefield" id="battlefield">
+      <!-- Enemy HUD -->
+      <div class="hud-card hud-enemy" id="enemy-hud">
+        <div class="hud-name">
+          <span id="enemy-name">???</span>
+          <span>
+            <span class="type-badge" id="enemy-type1"></span>
+            <span class="type-badge" id="enemy-type2"></span>
+          </span>
+        </div>
+        <div class="hud-level" id="enemy-level">Lv.50</div>
+        <div class="hud-hp-label">HP</div>
+        <div class="hp-bar-bg"><div class="hp-bar-fill" id="enemy-hp-bar" style="width:100%"></div></div>
+        <div class="stat-tooltip" id="enemy-tooltip">Carregando...</div>
+      </div>
+
+      <!-- Player HUD -->
+      <div class="hud-card hud-player" id="player-hud">
+        <div class="hud-name">
+          <span id="player-name">???</span>
+          <span>
+            <span class="type-badge" id="player-type1"></span>
+            <span class="type-badge" id="player-type2"></span>
+          </span>
+        </div>
+        <div class="hud-level" id="player-level">Lv.50</div>
+        <div class="hud-hp-label">HP</div>
+        <div class="hp-bar-bg"><div class="hp-bar-fill" id="player-hp-bar" style="width:100%"></div></div>
+        <div class="hp-numbers" id="player-hp-numbers">100 / 100</div>
+        <div class="stat-tooltip" id="player-tooltip">Carregando...</div>
+      </div>
+
+      <!-- Platforms -->
+      <div class="platform platform-enemy"></div>
+      <div class="platform platform-player"></div>
+
+      <!-- Sprites -->
+      <img id="enemy-sprite" class="sprite" src="" alt="enemy" />
+      <img id="player-sprite" class="sprite" src="" alt="player" />
+    </div>
+
+    <!-- Dialog box -->
+    <div class="dialog-box">
+      <div id="dialog-text">O que <span id="dialog-player-name">PIKACHU</span> vai fazer?<span class="cursor-blink">▼</span></div>
+    </div>
+
+    <!-- Battle UI: moves + actions -->
+    <div class="battle-ui" id="battle-ui">
+      <div class="moves-panel">
+        <div class="moves-grid" id="moves-grid">
+          <button class="move-btn" disabled>-</button>
+          <button class="move-btn" disabled>-</button>
+          <button class="move-btn" disabled>-</button>
+          <button class="move-btn" disabled>-</button>
+        </div>
+      </div>
+      <div class="actions-panel">
+        <button class="action-btn" id="btn-luta" onclick="showMoves()">⚔ LUTAR</button>
+        <button class="action-btn" id="btn-fugir" onclick="flee()">🏃 FUGIR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result overlay -->
+<div id="result-overlay">
+  <div id="result-title">VITÓRIA!</div>
+  <div id="result-subtitle">Seu Pokémon venceu!</div>
+  <button id="restart-btn" onclick="restartGame()">↩ JOGAR NOVAMENTE</button>
+</div>
+
+<script src="projeto/assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+    :root {
+      --hp-enemy: 100%;
+      --hp-player: 100%;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Press Start 2P', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ===== TITLE SCREEN ===== */
+    #title-screen {
+      text-align: center;
+      color: #fff;
+      padding: 2rem;
+    }
+    #title-screen h1 {
+      font-size: clamp(14px, 3vw, 28px);
+      color: #f8d030;
+      text-shadow: 4px 4px 0 #b8a018, -2px -2px 0 #c8b020;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .title-logo { font-size: clamp(28px,6vw,60px); margin-bottom: 1rem; animation: pulse 1s infinite alternate; }
+    @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.05)} }
+
+    .pokemon-selectors {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .selector-box {
+      background: #16213e;
+      border: 3px solid #f8d030;
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 200px;
+      text-align: center;
+    }
+    .selector-box label {
+      display: block;
+      color: #f8d030;
+      font-size: 9px;
+      margin-bottom: 1rem;
+    }
+    .selector-box select {
+      width: 100%;
+      padding: 8px;
+      background: #0f3460;
+      color: #fff;
+      border: 2px solid #f8d030;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      cursor: pointer;
+      outline: none;
+      border-radius: 4px;
+    }
+    .selector-box select:hover { background: #1a4a80; }
+
+    .preview-sprite {
+      width: 96px;
+      height: 96px;
+      image-rendering: pixelated;
+      margin: 1rem auto 0;
+      display: block;
+    }
+    .preview-sprite.shiny { filter: hue-rotate(60deg) saturate(2); }
+
+    .shiny-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 0.75rem;
+      color: #f8d030;
+      font-size: 7px;
+      cursor: pointer;
+    }
+    .shiny-toggle input { cursor: pointer; accent-color: #f8d030; }
+
+    #start-btn {
+      margin-top: 2rem;
+      padding: 16px 32px;
+      background: #f8d030;
+      color: #000;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      border-bottom: 4px solid #b8a018;
+      transition: transform 0.1s, border-bottom 0.1s;
+    }
+    #start-btn:hover { transform: translateY(-2px); }
+    #start-btn:active { transform: translateY(2px); border-bottom: 2px solid #b8a018; }
+    #start-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ===== BATTLE SCREEN ===== */
+    #battle-screen { display: none; width: 100%; max-width: 800px; padding: 1rem; }
+
+    /* Background / battlefield */
+    .battlefield {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/2.5;
+      background: linear-gradient(180deg,#87ceeb 0%,#87ceeb 55%,#a8d5a2 55%,#a8d5a2 65%,#5b8a4a 65%,#5b8a4a 100%);
+      border: 4px solid #2c2c2c;
+      border-radius: 4px;
+      overflow: hidden;
+      image-rendering: pixelated;
+    }
+
+    /* HUD cards */
+    .hud-card {
+      position: absolute;
+      background: #f0f0f0;
+      border: 3px solid #2c2c2c;
+      border-radius: 8px;
+      padding: 8px 12px;
+      min-width: 180px;
+      box-shadow: 4px 4px 0 #2c2c2c;
+    }
+    .hud-enemy { top: 8%; left: 3%; }
+    .hud-player { bottom: 5%; right: 3%; }
+
+    .hud-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #2c2c2c;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .hud-level { font-size: 7px; color: #555; }
+    .hud-hp-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #2c2c2c;
+      margin-bottom: 2px;
+    }
+    .hp-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #8b8b8b;
+      border: 1px solid #2c2c2c;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .hp-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: #30c830;
+      transition: width 0.5s ease, background-color 0.5s;
+    }
+    .hp-bar-fill.mid { background: #f8c000; }
+    .hp-bar-fill.low { background: #d80000; }
+
+    .hp-numbers {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      text-align: right;
+      color: #2c2c2c;
+      margin-top: 2px;
+    }
+
+    /* Type badges */
+    .type-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: #fff;
+      text-transform: uppercase;
+      margin-left: 4px;
+    }
+
+    /* Sprites */
+    .sprite {
+      position: absolute;
+      image-rendering: pixelated;
+      transition: transform 0.15s;
+    }
+    #enemy-sprite {
+      width: clamp(80px,14%,120px);
+      bottom: 38%;
+      left: 55%;
+    }
+    #player-sprite {
+      width: clamp(80px,14%,120px);
+      bottom: 12%;
+      left: 8%;
+      transform: scaleX(-1);
+    }
+    #player-sprite.shiny, #enemy-sprite.shiny { filter: hue-rotate(60deg) saturate(2); }
+
+    /* Ground platforms */
+    .platform {
+      position: absolute;
+      background: #c8a878;
+      border: 2px solid #8b6840;
+      border-radius: 50%;
+    }
+    .platform-enemy {
+      width: 20%;
+      height: 6%;
+      bottom: 34%;
+      left: 49%;
+      opacity: 0.7;
+    }
+    .platform-player {
+      width: 20%;
+      height: 6%;
+      bottom: 8%;
+      left: 4%;
+      opacity: 0.7;
+    }
+
+    /* Attack animation */
+    @keyframes shake-left { 0%,100%{transform:scaleX(-1) translateX(0)} 25%{transform:scaleX(-1) translateX(-10px)} 75%{transform:scaleX(-1) translateX(8px)} }
+    @keyframes shake-right { 0%,100%{transform:translateX(0)} 25%{transform:translateX(10px)} 75%{transform:translateX(-8px)} }
+    @keyframes flash { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    @keyframes projectile {
+      0%{left:25%;opacity:1}
+      100%{left:65%;opacity:0}
+    }
+    @keyframes bounce-in { 0%{transform:scale(0) scaleX(-1)} 60%{transform:scale(1.15) scaleX(-1)} 100%{transform:scale(1) scaleX(-1)} }
+    @keyframes bounce-in-r { 0%{transform:scale(0)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
+
+    .sprite-enter-player { animation: bounce-in 0.5s ease forwards; }
+    .sprite-enter-enemy { animation: bounce-in-r 0.5s ease forwards; }
+    .attacking { animation: shake-left 0.4s ease !important; }
+    .hit { animation: flash 0.4s ease; }
+
+    .projectile {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      top: 45%;
+      animation: projectile 0.4s ease forwards;
+      pointer-events: none;
+    }
+
+    /* ===== DIALOG BOX ===== */
+    .dialog-box {
+      background: #f0f0f0;
+      border: 4px solid #2c2c2c;
+      border-radius: 4px;
+      padding: 16px 20px;
+      margin-top: 4px;
+      min-height: 64px;
+      box-shadow: 4px 4px 0 #2c2c2c;
+      position: relative;
+    }
+    #dialog-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #2c2c2c;
+      line-height: 1.8;
+      min-height: 36px;
+    }
+    .cursor-blink {
+      display: inline-block;
+      animation: blink 0.8s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ===== MENU ===== */
+    .battle-ui {
+      background: #f0f0f0;
+      border: 4px solid #2c2c2c;
+      border-radius: 4px;
+      margin-top: 4px;
+      box-shadow: 4px 4px 0 #2c2c2c;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .moves-panel {
+      padding: 12px;
+      border-right: 3px solid #2c2c2c;
+    }
+    .moves-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .move-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      padding: 10px 6px;
+      background: #fff;
+      border: 2px solid #2c2c2c;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.6;
+      transition: background 0.1s;
+      color: #2c2c2c;
+    }
+    .move-btn:hover { background: #e0e0e0; }
+    .move-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .move-btn .move-type {
+      display: block;
+      font-size: 6px;
+      margin-top: 2px;
+    }
+    .move-btn .move-pp { font-size: 6px; color: #666; display: block; }
+
+    .actions-panel {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .action-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: 10px 8px;
+      background: #fff;
+      border: 2px solid #2c2c2c;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+      color: #2c2c2c;
+      text-align: center;
+    }
+    .action-btn:hover { background: #e0e0e0; }
+    .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ===== TYPE COLORS ===== */
+    .type-normal{background:#a8a878} .type-fire{background:#f08030} .type-water{background:#6890f0}
+    .type-electric{background:#f8d030} .type-grass{background:#78c850} .type-ice{background:#98d8d8}
+    .type-fighting{background:#c03028} .type-poison{background:#a040a0} .type-ground{background:#e0c068}
+    .type-flying{background:#a890f0} .type-psychic{background:#f85888} .type-bug{background:#a8b820}
+    .type-rock{background:#b8a038} .type-ghost{background:#705898} .type-dragon{background:#7038f8}
+    .type-dark{background:#705848} .type-steel{background:#b8b8d0} .type-fairy{background:#ee99ac}
+
+    /* HP bar colors for type */
+    .hp-bar-fill { background: #30c830; }
+
+    /* ===== RESULT OVERLAY ===== */
+    #result-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    #result-overlay.show { display: flex; }
+    #result-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(18px,4vw,36px);
+      color: #f8d030;
+      text-shadow: 4px 4px 0 #b8a018;
+      margin-bottom: 1rem;
+      animation: pulse 0.8s infinite alternate;
+    }
+    #result-subtitle {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+    #restart-btn {
+      padding: 14px 28px;
+      background: #f8d030;
+      color: #000;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      border-bottom: 4px solid #b8a018;
+    }
+    #restart-btn:hover { filter: brightness(1.1); }
+
+    /* Tooltip on hover */
+    .hud-card:hover .stat-tooltip { display: block; }
+    .stat-tooltip {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #2c2c2c;
+      color: #f0f0f0;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      z-index: 20;
+      white-space: nowrap;
+      line-height: 1.8;
+      margin-top: 4px;
+    }
+
+    /* ===== LOADING ===== */
+    #loading {
+      display: none;
+      color: #f8d030;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      text-align: center;
+      padding: 2rem;
+    }
+    .pokeball-spin {
+      font-size: 2rem;
+      display: block;
+      margin: 0 auto 1rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    #battle-screen .wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .screen-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #f8d030;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    /* Fainted animation */
+    @keyframes faint { to{transform:translateY(60px) scaleX(-1);opacity:0} }
+    @keyframes faint-r { to{transform:translateY(60px);opacity:0} }
+    .fainted-player { animation: faint 0.7s forwards !important; }
+    .fainted-enemy { animation: faint-r 0.7s forwards !important; }
