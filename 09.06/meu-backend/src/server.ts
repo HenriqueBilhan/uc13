@@ -80,6 +80,21 @@ app.put("/usuarios/:id", async (req, res) => {
     return res.status(500).json("Erro interno do servidor: " + erro);
   }
 });
+app.delete("/usuarios/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+
+    const [resultado] =  await pool.query(
+      "DELETE  FROM usuarios WHERE id = ?",
+      [id]
+    );
+    return res.status(200).json("Usuarios foi pro vinagre!");
+  } catch (erro) {
+    return res.status(500).json("Erro interno do servidor: " + erro);
+    
+  }
+  
+})
 
 // listen() é o método do express para colocar nosso servidor no ar. Ele precisa que passemos duas coisas como parâmetro:
 // o primeiro é a porta
