@@ -51,6 +51,39 @@ app.put("/livro/:id", async (req, res) => {
   }
 });
 
+app.patch("/livro/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const campos = req.body;
+
+    const keys = Object.keys(campos);
+    const values = Object.values(campos);
+
+    if (keys.length === 0) {
+      return res.status(400).json({
+        mensagem: "Nenhum campo enviado para atualização."
+      });
+    }
+
+    const setClause = keys.map((key) => `${key} = ?`).join(", ");
+
+    await pool.query(
+      `UPDATE livro SET ${setClause} WHERE id = ?`,
+      [...values, id]
+    );
+
+    return res.status(200).json({
+      mensagem: "Livro atualizado parcialmente com sucesso!"
+    });
+
+  } catch (erro) {
+    console.error(erro);
+
+    return res.status(500).json({
+      mensagem: "Erro interno do servidor"
+    });
+  }
+});
 //DELETE
 app.delete("/livro/:id", async (req, res) => {
   try {
