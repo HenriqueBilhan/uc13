@@ -1,0 +1,26 @@
+{
+  "name": "selecoes-jogadores",
+  "version": "1.0.0",
+  "description": "Sistema simples para armazenar Selecoes e Jogadores usando TypeScript e TypeORM",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.0"
+  }
+}
