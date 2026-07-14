@@ -3,6 +3,7 @@ import express, { Application } from "express";
 import router from "./routes";
 import { AppDataSource } from "./config/data-source";
 import { errorHandler } from "./middlewares/errorHandler";
+import "dotenv/config";
 
 const app: Application = express();
 const PORTA: number = 3000;
